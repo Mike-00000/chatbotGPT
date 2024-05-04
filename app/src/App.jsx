@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,6 +7,26 @@ import { MainContainer, ChatContainer, MessageList, Message, MessageInput, Typin
 
 
 function App() {
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Modifier cette valeur selon votre propre logique de détection de mobile
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Appel initial pour définir l'état initial
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const containerStyle = isMobile
+    ? { position: "relative", height: "82vh", width: "80vw" }
+    : { position: "relative", height: "90vh", width: "40vw" };
+
 
   const [typing, setTyping] = useState(false);
   const [messages, setMessages] = useState([
@@ -90,8 +110,8 @@ function App() {
 
   return (
     <div className='App'>
-      <div style={{ position: "relative", height: "800px", width: "700px"}}>
-        <MainContainer>
+      <div style={containerStyle}>
+        <MainContainer style={{ borderRadius: "10px"}}>
           <ChatContainer>
             <MessageList
               scrollBehavior='smooth'
